@@ -1,0 +1,47 @@
+{
+  "day": 19,
+  "topic": "GitOps and Argo CD",
+  "components": [
+    {
+      "name": "Git repository",
+      "description": "Version-controlled desired manifests / Helm / Kustomize"
+    },
+    {
+      "name": "Argo CD repo-server",
+      "description": "Fetches and renders source revision"
+    },
+    {
+      "name": "Application controller",
+      "description": "Compares desired Git state with live cluster state"
+    },
+    {
+      "name": "Kubernetes API",
+      "description": "Receives sync operations"
+    },
+    {
+      "name": "Live resources",
+      "description": "Current cluster objects and health"
+    },
+    {
+      "name": "Diff + sync policy",
+      "description": "Manual / automated sync, prune and self-heal policy"
+    }
+  ],
+  "connections": [
+    "Commit desired manifests",
+    "Argo CD fetches and rend",
+    "Controller compares desi",
+    "Health assessment report",
+    "Drift triggers sync / se"
+  ],
+  "operational_steps": [
+    "Commit desired manifests to Git",
+    "Argo CD fetches and renders revision",
+    "Controller compares desired and live state",
+    "Sync applies resources to Kubernetes API",
+    "Health assessment reports resource state",
+    "Drift triggers sync / self-heal according to policy"
+  ],
+  "failure_checkpoint": "Git desired state differs from live state or sync is blocked",
+  "recovery_path": "Inspect Argo CD diff, repo rendering, sync errors and RBAC; fix Git source or policy deliberately."
+}

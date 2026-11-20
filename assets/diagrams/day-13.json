@@ -1,0 +1,46 @@
+{
+  "day": 13,
+  "topic": "RBAC and Kubernetes Security",
+  "components": [
+    {
+      "name": "Human / workload identity",
+      "description": "User, IAM authenticator or ServiceAccount identity"
+    },
+    {
+      "name": "Authentication",
+      "description": "API server establishes who is making the request"
+    },
+    {
+      "name": "Authorization",
+      "description": "RBAC evaluates verbs, resources and scope"
+    },
+    {
+      "name": "Admission",
+      "description": "Policy validates or mutates an otherwise authorized request"
+    },
+    {
+      "name": "Role / ClusterRole",
+      "description": "Defines allowed API actions"
+    },
+    {
+      "name": "RoleBinding",
+      "description": "Grants role to subject in namespace or cluster scope"
+    }
+  ],
+  "connections": [
+    "Authenticate user or Ser",
+    "Authorize verb and resou",
+    "Admission evaluates poli",
+    "Bind least-privilege Rol",
+    "Test allowed and denied "
+  ],
+  "operational_steps": [
+    "Authenticate user or ServiceAccount",
+    "Authorize verb and resource with RBAC",
+    "Admission evaluates policy constraints",
+    "Bind least-privilege Role to subject",
+    "Test allowed and denied API operations"
+  ],
+  "failure_checkpoint": "RBAC denies a required operation or grants excessive access",
+  "recovery_path": "Use kubectl auth can-i and role review; grant the narrowest required verb/resource/scope."
+}

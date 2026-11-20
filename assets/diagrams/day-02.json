@@ -1,0 +1,47 @@
+{
+  "day": 2,
+  "topic": "Cluster Setup, kubectl and kubeconfig",
+  "components": [
+    {
+      "name": "Admin workstation",
+      "description": "Runs kubeadm and kubectl with bootstrap credentials"
+    },
+    {
+      "name": "kubeadm init",
+      "description": "Bootstraps control-plane components and cluster certificates"
+    },
+    {
+      "name": "API server + etcd",
+      "description": "Control-plane endpoint and persistent cluster state"
+    },
+    {
+      "name": "Bootstrap token",
+      "description": "Short-lived join credential plus CA hash validation"
+    },
+    {
+      "name": "kubeadm join",
+      "description": "Worker authenticates and registers with cluster"
+    },
+    {
+      "name": "kubeconfig",
+      "description": "Stores endpoint, trust and user context for kubectl"
+    }
+  ],
+  "connections": [
+    "Prepare control-plane ho",
+    "Run kubeadm init and boo",
+    "Configure admin kubeconf",
+    "Join worker nodes and ap",
+    "Check node readiness and"
+  ],
+  "operational_steps": [
+    "Prepare control-plane host and prerequisites",
+    "Run kubeadm init and bootstrap control plane",
+    "Configure admin kubeconfig",
+    "Generate join command and CA hash",
+    "Join worker nodes and approve / verify registration",
+    "Check node readiness and cluster DNS"
+  ],
+  "failure_checkpoint": "Expired bootstrap token or CA hash mismatch",
+  "recovery_path": "Generate a fresh kubeadm token, verify the CA certificate hash and retry the join securely."
+}

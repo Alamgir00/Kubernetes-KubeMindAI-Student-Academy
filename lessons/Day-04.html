@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KubeMindAI Day 04 — ReplicaSets and Deployments</title>
+<style>
+body{margin:0;background:#f2f5fa;color:#243247;font:16px/1.7 Arial,sans-serif}
+header{background:linear-gradient(130deg,#10243a,#174c80);color:white;padding:40px 6%}
+main{max-width:980px;margin:25px auto;padding:0 18px}
+section,nav{background:white;border:1px solid #dbe3ed;border-radius:12px;padding:22px;margin-bottom:18px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.15}
+h2{color:#10243a;border-bottom:2px solid #e5edf7;padding-bottom:8px}
+h3{color:#174c80;margin-top:23px}
+pre{background:#111827;color:#e5e7eb;padding:16px;border-radius:8px;overflow:auto;font-size:13px}
+code{font-family:Consolas,monospace}
+.callout{background:#eef4ff;border-left:4px solid #2563eb;padding:13px;margin:15px 0}
+.warning{background:#fff7ed;border-left-color:#b45309}
+table{border-collapse:collapse;width:100%;margin:14px 0}
+td,th{border:1px solid #dbe3ed;padding:9px;text-align:left;vertical-align:top}
+th{background:#eaf1fa}
+.diagram{background:#f8fafc;border:1px solid #dbe3ed;border-radius:8px;padding:16px;text-align:center}
+.node{display:inline-block;border:2px solid #8bb5ed;background:white;padding:10px;margin:5px;border-radius:8px;font-weight:bold}
+.small{color:#64748b;font-size:13px}
+footer{text-align:center;background:#10243a;color:white;padding:22px}
+@media print{header{print-color-adjust:exact}section,nav{break-inside:avoid}pre{white-space:pre-wrap;print-color-adjust:exact}}
+</style><link rel="stylesheet" href="../assets/css/academy.css">
+</head><body>
+<header><div class="small" style="color:#a5e9f5">KUBEMINDAI · KUBERNETES ENGINEER ACADEMY</div>
+<h1>Day 04: ReplicaSets and Deployments</h1><p>Maintain replicas and manage application rollouts</p>
+<p>Student learning duration: 1–3 hours · Beginner-to-production learning path</p><nav class="academy-nav"><a href="../index.html">Academy Home</a><a href="../simulator/KubeMindAI-Student-Simulator.html">Open Training Simulator</a><a href="Day-03.html">Previous Day</a><a href="Day-05.html">Next Day</a></nav></header>
+<main>
+<nav><strong>Lesson sections</strong><ol>
+<li>Learning objectives</li><li>Concepts and explanations</li><li>Architecture and workflow</li>
+<li>Commands and practical lab</li><li>YAML example</li><li>Verification</li>
+<li>Troubleshooting</li><li>Production considerations</li><li>Interview questions</li><li>Homework and evaluation</li>
+</ol></nav>
+<section><h2>1. Learning Objectives</h2><ul><li>Understand desired replicas, ReplicaSet ownership, Deployment updates, rollout status, history and rollback.</li></ul>
+<div class="callout">Study the concepts first, then perform the lab in a disposable training environment. Understand every command before running it.</div></section>
+<section><h2>2. Concepts and Technical Explanations</h2><h3>ReplicaSet</h3><p>Maintains a desired number of matching Pods.</p><h3>Deployment</h3><p>Manages ReplicaSets and provides declarative application updates.</p><h3>Rolling update</h3><p>Gradually replaces old Pods with new Pods.</p><h3>Revision</h3><p>A recorded Deployment rollout version.</p><h3>Rollback</h3><p>Returns a Deployment to a previous revision when available.</p></section>
+<section><h2>3. Architecture and Workflow</h2>
+<p>Understand how this day's Kubernetes topic fits into the overall cluster. Follow the request, resource or workload from its configuration through Kubernetes processing to its observable result.</p>
+<div class="diagram"><div class="node">Administrator / Git / Application</div><div>↓</div><div class="node">Kubernetes API Server</div><div>↓</div><div class="node">Controllers and Cluster Components</div><div>↓</div><div class="node">Worker Nodes and Workloads</div><div>↓</div><div class="node">Verification and Operations</div></div>
+<p>The exact components involved depend on the resource and cluster configuration. Use <code>kubectl describe</code>, events and logs to verify actual behavior.</p></section>
+<section><section class="km-explorer" data-km-config='{&quot;day&quot;:4,&quot;title&quot;:&quot;ReplicaSets and Deployments&quot;,&quot;nodes&quot;:[{&quot;name&quot;:&quot;kubectl client&quot;,&quot;description&quot;:&quot;Reads deployment.yaml, resolves context and credentials, discovers the API resource, and sends the apply request&quot;},{&quot;name&quot;:&quot;API server&quot;,&quot;description&quot;:&quot;Receives the REST request and coordinates the API request pipeline&quot;},{&quot;name&quot;:&quot;Authentication&quot;,&quot;description&quot;:&quot;Establishes the caller identity from configured credentials or identity integration&quot;},{&quot;name&quot;:&quot;Authorization&quot;,&quot;description&quot;:&quot;Checks whether the identity may create or patch Deployments in the namespace&quot;},{&quot;name&quot;:&quot;Mutating admission&quot;,&quot;description&quot;:&quot;Applicable admission plugins or webhooks can default or mutate the object&quot;},{&quot;name&quot;:&quot;API validation&quot;,&quot;description&quot;:&quot;Checks schema, field types, required values and Kubernetes API invariants&quot;},{&quot;name&quot;:&quot;Validating admission&quot;,&quot;description&quot;:&quot;Applicable policy plugins or webhooks can reject the object&quot;},{&quot;name&quot;:&quot;Apply field manager&quot;,&quot;description&quot;:&quot;Calculates client-side patch or server-side apply ownership and conflict checks&quot;},{&quot;name&quot;:&quot;etcd&quot;,&quot;description&quot;:&quot;Persists accepted desired Deployment state in the control-plane backing store&quot;},{&quot;name&quot;:&quot;Deployment controller&quot;,&quot;description&quot;:&quot;Observes Deployment changes and creates or updates a ReplicaSet revision&quot;},{&quot;name&quot;:&quot;ReplicaSet controller&quot;,&quot;description&quot;:&quot;Creates or removes Pod API objects to converge on desired replicas&quot;},{&quot;name&quot;:&quot;Scheduler&quot;,&quot;description&quot;:&quot;Filters and scores nodes, then binds each unscheduled Pod to an eligible node&quot;},{&quot;name&quot;:&quot;Worker node + kubelet&quot;,&quot;description&quot;:&quot;Kubelet observes assigned Pods and coordinates local Pod lifecycle&quot;},{&quot;name&quot;:&quot;Container runtime (CRI)&quot;,&quot;description&quot;:&quot;Creates Pod sandbox, pulls images and starts containers&quot;},{&quot;name&quot;:&quot;CNI plugin&quot;,&quot;description&quot;:&quot;Configures Pod IP address and network connectivity during sandbox setup&quot;},{&quot;name&quot;:&quot;Pod + probes&quot;,&quot;description&quot;:&quot;Containers run; startup, liveness and readiness probes report health&quot;},{&quot;name&quot;:&quot;EndpointSlice controller&quot;,&quot;description&quot;:&quot;Publishes current eligible Pod IP and port endpoints for Services&quot;},{&quot;name&quot;:&quot;EndpointSlices&quot;,&quot;description&quot;:&quot;Store the ready backend endpoint set for a Service&quot;},{&quot;name&quot;:&quot;Service dataplane&quot;,&quot;description&quot;:&quot;kube-proxy or eBPF dataplane routes Service traffic to eligible Pod endpoints&quot;}],&quot;steps&quot;:[&quot;kubectl reads deployment.yaml and parses the Kubernetes object&quot;,&quot;kubectl resolves kubeconfig context, namespace, credentials and API resource mapping&quot;,&quot;kubectl sends the create or patch request to the API server&quot;,&quot;API server receives the request and establishes the request pipeline&quot;,&quot;Authentication identifies the caller&quot;,&quot;Authorization checks the requested verb and resource scope&quot;,&quot;Mutating admission applies applicable defaults or mutations&quot;,&quot;API validation checks schema and resource invariants&quot;,&quot;Validating admission evaluates applicable policy and can reject the request&quot;,&quot;Apply logic calculates patch / field ownership and detects conflicts&quot;,&quot;etcd persists the accepted desired Deployment state&quot;,&quot;Deployment controller observes the change and creates or updates a ReplicaSet&quot;,&quot;ReplicaSet controller creates the required Pod API objects&quot;,&quot;Scheduler selects eligible worker nodes and binds unscheduled Pods&quot;,&quot;Worker kubelet observes assigned Pods and prepares volumes&quot;,&quot;CRI runtime creates Pod sandbox and containers; CNI configures Pod networking&quot;,&quot;Startup, liveness and readiness probes operate according to their configuration&quot;,&quot;EndpointSlice controller updates the Service&#x27;s eligible backend endpoint set&quot;,&quot;Service dataplane routes client traffic to ready Pod endpoints&quot;],&quot;edges&quot;:[&quot;reads deployment.yaml an&quot;,&quot;resolves kubeconfig cont&quot;,&quot;sends the create or patc&quot;,&quot;API server receives the &quot;,&quot;Authentication identifie&quot;,&quot;Authorization checks the&quot;,&quot;Mutating admission appli&quot;,&quot;API validation checks sc&quot;,&quot;Validating admission eva&quot;,&quot;etcd persists the accept&quot;,&quot;Deployment ctrl observes&quot;,&quot;ReplicaSet ctrl creates &quot;,&quot;Scheduler selects eligib&quot;,&quot;Worker kubelet observes &quot;,&quot;CRI runtime creates Pod &quot;,&quot;Startup, liveness and re&quot;,&quot;EndpointSlice ctrl updat&quot;,&quot;Service dataplane routes&quot;],&quot;failure&quot;:&quot;Forbidden apply, admission rejection or unschedulable Pods&quot;,&quot;recovery&quot;:&quot;Check auth can-i, server dry-run and Pod events; fix permissions, policy or scheduling capacity.&quot;}'><h2>Architecture Explorer &amp; Operational Flow</h2><p class="small">Explore the topic-specific architecture, click components for explanations, and follow the synchronized operational sequence.</p><div class="km-layout"><div class="km-visual"><div class="km-visual-head"><strong>Architecture view · Day 04</strong><span class="km-stage">Ready</span></div><div class="km-svg-scroll"><svg class="km-svg" role="img" aria-label="ReplicaSets and Deployments Kubernetes architecture"></svg></div><div class="km-component-info" aria-live="polite"><strong>Select a component</strong><p>Component responsibility appears here.</p></div></div><div class="km-flow"><div class="km-visual-head"><strong>Operational flow</strong><span class="km-progress-label">0 / 19</span></div><p class="km-current-step" aria-live="polite">Press Play or Next to start.</p><div class="km-controls"><button type="button" data-km="play">▶ Play</button><button type="button" data-km="pause">Ⅱ Pause</button><button type="button" data-km="prev">← Previous</button><button type="button" data-km="next">Next →</button><button type="button" data-km="restart">↺ Restart</button><label>Speed <select data-km="speed"><option value="2400">0.5×</option><option value="1400" selected>1×</option><option value="700">2×</option><option value="350">4×</option></select></label></div><ol class="km-step-list"><li>kubectl reads deployment.yaml and parses the Kubernetes object</li><li>kubectl resolves kubeconfig context, namespace, credentials and API resource mapping</li><li>kubectl sends the create or patch request to the API server</li><li>API server receives the request and establishes the request pipeline</li><li>Authentication identifies the caller</li><li>Authorization checks the requested verb and resource scope</li><li>Mutating admission applies applicable defaults or mutations</li><li>API validation checks schema and resource invariants</li><li>Validating admission evaluates applicable policy and can reject the request</li><li>Apply logic calculates patch / field ownership and detects conflicts</li><li>etcd persists the accepted desired Deployment state</li><li>Deployment controller observes the change and creates or updates a ReplicaSet</li><li>ReplicaSet controller creates the required Pod API objects</li><li>Scheduler selects eligible worker nodes and binds unscheduled Pods</li><li>Worker kubelet observes assigned Pods and prepares volumes</li><li>CRI runtime creates Pod sandbox and containers; CNI configures Pod networking</li><li>Startup, liveness and readiness probes operate according to their configuration</li><li>EndpointSlice controller updates the Service&#x27;s eligible backend endpoint set</li><li>Service dataplane routes client traffic to ready Pod endpoints</li></ol></div></div>
+<div class="km-day04-extra"><h3>Day 04 flagship: failure injection</h3><p>Inject a training failure to see its location, symptoms, diagnostic commands and recovery path.</p><div class="km-faults"><button type="button" data-fault="forbidden">Forbidden</button><button type="button" data-fault="admission">Admission denied</button><button type="button" data-fault="invalid">Invalid YAML</button><button type="button" data-fault="imagepull">ImagePullBackOff</button><button type="button" data-fault="cpu">Insufficient CPU</button><button type="button" data-fault="memory">Insufficient memory</button><button type="button" data-fault="pending">Scheduling failure</button><button type="button" data-fault="crash">CrashLoopBackOff</button><button type="button" data-fault="cni">CNI failure</button><button type="button" data-fault="readiness">Readiness failure</button><button type="button" data-fault="reset">Reset</button></div><div class="km-fault-output" aria-live="polite">Choose a failure scenario.</div><h3>Desired state versus actual state</h3><div class="km-reconcile"><div><span>Desired replicas</span><strong>3</strong></div><div class="km-replica-track"><span></span><span></span><span></span></div><div><span>Actual replicas</span><strong data-actual>0 → 3</strong></div><button type="button" data-km="reconcile">Animate reconciliation</button></div></div><div class="km-resilience-note"><strong>Failure checkpoint:</strong> Forbidden apply, admission rejection or unschedulable Pods<br><strong>Recovery path:</strong> Check auth can-i, server dry-run and Pod events; fix permissions, policy or scheduling capacity.</div></section><section class="km-lifecycle-notes">
+<h2>Complete backend lifecycle of <code>kubectl apply -f deployment.yaml</code></h2>
+<p><strong>Key distinction:</strong> a successful apply confirms that the API operation was accepted. It does not guarantee that the Deployment has completed rollout or that its Pods are Ready.</p>
+<h3>1. Client-side processing and API request</h3>
+<ol>
+<li><strong>Read and parse:</strong> kubectl reads the YAML document, decodes the Kubernetes object, resolves API group/version/kind, namespace and resource name.</li>
+<li><strong>Context and identity:</strong> kubectl loads kubeconfig, selects current context, endpoint, trust bundle and authentication method. Credential plugins may obtain short-lived cloud identity tokens.</li>
+<li><strong>Discovery and REST mapping:</strong> kubectl discovers the API resource and maps Deployment to the namespaced <code>apps/v1</code> endpoint.</li>
+<li><strong>Apply calculation:</strong> client-side apply calculates a patch using the manifest and last-applied-configuration annotation. Server-side apply sends an apply patch and lets the API server manage field ownership in <code>managedFields</code>.</li>
+</ol>
+<h3>2. API server request pipeline</h3>
+<ol>
+<li><strong>Authentication:</strong> API server establishes the caller identity (for example certificate, bearer token or webhook / external identity integration).</li>
+<li><strong>Authorization:</strong> configured authorizer checks whether the identity can perform the requested verb on Deployments in the namespace. RBAC is commonly used.</li>
+<li><strong>Mutating admission:</strong> applicable admission plugins / webhooks can default or mutate the object.</li>
+<li><strong>Schema and API validation:</strong> object fields, types, required values and API invariants are checked.</li>
+<li><strong>Validating admission:</strong> applicable policy webhooks / admission plugins can reject an otherwise valid request.</li>
+<li><strong>Field management and conflict checks:</strong> server-side apply tracks field ownership; conflicting field managers can produce a conflict response.</li>
+<li><strong>Persistence:</strong> accepted object is stored in the API server backing store (etcd in standard Kubernetes control planes), then the API response returns to kubectl.</li>
+</ol>
+<h3>3. Asynchronous control loops</h3>
+<ol>
+<li><strong>Deployment controller:</strong> observes the Deployment and creates or updates a ReplicaSet for the Pod template revision.</li>
+<li><strong>ReplicaSet controller:</strong> compares desired replicas with matching actual Pods and creates or deletes Pod API objects to converge.</li>
+<li><strong>Scheduler:</strong> watches unscheduled Pods, filters and scores eligible nodes using requests, taints/tolerations, affinity, topology and policies, then binds a Pod to a node.</li>
+<li><strong>Kubelet:</strong> on the selected node, observes assigned Pod, prepares volumes and networking, and calls the CRI runtime.</li>
+<li><strong>CRI runtime + CNI:</strong> runtime creates Pod sandbox and containers; CNI plugin configures Pod networking as part of sandbox setup.</li>
+<li><strong>Probes:</strong> startup probe gates liveness/readiness while configured; liveness can trigger container restart; readiness controls traffic eligibility.</li>
+<li><strong>EndpointSlice controller + Service dataplane:</strong> EndpointSlices reflect eligible Pod endpoints; kube-proxy or an eBPF dataplane routes Service traffic to them.</li>
+</ol>
+<h3>Example manifest with important fields</h3>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels: { app: web }
+  template:
+    metadata:
+      labels: { app: web }
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.27
+        ports:
+        - containerPort: 80
+        readinessProbe:
+          httpGet: { path: /, port: 80 }
+          initialDelaySeconds: 3
+          periodSeconds: 5</code></pre>
+<p><strong>Field interpretation:</strong> <code>apiVersion</code>/<code>kind</code> select the API schema; <code>metadata</code> identifies the object; <code>replicas</code> is desired count; selector must match Pod-template labels; template is copied into created Pods; container image and probe define runtime behaviour.</p>
+<h3>Commands to observe and troubleshoot</h3>
+<pre><code>kubectl config current-context
+kubectl auth can-i patch deployments -n default
+kubectl apply --dry-run=server -f deployment.yaml
+kubectl apply -f deployment.yaml
+kubectl get deployment,replicaset,pods -l app=web -o wide
+kubectl describe deployment web
+kubectl get events --sort-by=.lastTimestamp
+kubectl rollout status deployment/web
+kubectl rollout history deployment/web
+kubectl get deployment web -o yaml --show-managed-fields
+kubectl describe pod &lt;pod-name&gt;
+kubectl logs &lt;pod-name&gt; --previous</code></pre>
+<table><tr><th>Failure</th><th>Likely stage / symptom</th><th>Diagnosis and recovery</th></tr>
+<tr><td>Forbidden</td><td>Authorization; HTTP 403</td><td><code>kubectl auth can-i</code>, inspect Role/RoleBinding and grant least privilege.</td></tr>
+<tr><td>Admission denied / invalid</td><td>Admission or schema validation</td><td>Server dry-run, inspect API error and policy webhook; correct manifest or policy exception.</td></tr>
+<tr><td>ImagePullBackOff</td><td>Kubelet / runtime image pull</td><td>Describe Pod; verify image tag, registry reachability and imagePullSecrets.</td></tr>
+<tr><td>Pending / insufficient CPU or memory</td><td>Scheduler cannot find feasible node</td><td>Pod events, requests, node allocatable, taints and affinity; right-size or add capacity.</td></tr>
+<tr><td>CrashLoopBackOff</td><td>Container process repeatedly exits</td><td>Current and previous logs, exit code, command, config, dependencies and probes.</td></tr>
+<tr><td>CNI failure</td><td>Pod sandbox / network setup</td><td>Pod events, CNI daemon logs, IP capacity and node networking; repair plugin / IPAM.</td></tr>
+<tr><td>Readiness failure</td><td>Container runs but not traffic eligible</td><td>Probe path/port, startup timing and app health; fix endpoint or tune thresholds.</td></tr></table>
+<h3>Interview questions with concise answers</h3>
+<ul><li><strong>Does apply mean Pods are ready?</strong> No. It confirms API acceptance; controllers, scheduler and kubelet reconcile asynchronously.</li>
+<li><strong>Which controller creates ReplicaSets?</strong> Deployment controller. ReplicaSet controller creates / deletes Pod objects.</li>
+<li><strong>Who selects the node?</strong> kube-scheduler; kubelet manages the Pod after binding.</li>
+<li><strong>What is server-side apply?</strong> API-server-managed field ownership and merge semantics, recorded in managedFields.</li>
+<li><strong>How does readiness affect traffic?</strong> Readiness status influences EndpointSlice membership for Service backends.</li>
+<li><strong>Where is desired state stored?</strong> In the API server backing store, typically etcd.</li></ul>
+</section><h2>4. Important Commands</h2><pre><code>kubectl get deployments
+kubectl get replicasets
+kubectl rollout status deployment/web
+kubectl rollout history deployment/web
+kubectl rollout undo deployment/web
+kubectl scale deployment web --replicas=4</code></pre>
+<p>Run commands in the correct cluster context and namespace. Replace example names with the actual names returned by your cluster.</p></section>
+<section><h2>5. YAML Example</h2><pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.27
+        ports:
+        - containerPort: 80</code></pre>
+<p>Review the API version, kind, metadata, selectors, labels, Pod template and container configuration. Save the example as a YAML file before applying it. Adapt placeholders to your environment.</p></section>
+<section><h2>6. Hands-on Practical Lab</h2><p>Create a three-replica Deployment; scale it to four; update the image; watch the rollout; inspect rollout history; perform a rollback in the lab.</p>
+<h3>Suggested lab sequence</h3><ol><li>Verify your current Kubernetes context.</li><li>Inspect existing resources before changing anything.</li><li>Create the lab resources using the supplied YAML.</li><li>Watch the resource status and Kubernetes events.</li><li>Test the expected behavior.</li><li>Record the output and explain what happened.</li><li>Clean up only resources created for this exercise.</li></ol></section>
+<section><h2>7. Verification and Expected Results</h2><pre><code>kubectl get deployment web; kubectl get rs; kubectl get pods -l app=web; kubectl rollout status deployment/web.</code></pre>
+<p>Success means the expected resource state and behavior are visible. A command returning successfully is not sufficient if the workload is not healthy.</p></section>
+<section><h2>8. Troubleshooting Scenarios</h2><p>ProgressDeadlineExceeded: inspect Pod events and readiness. Old Pods remain: inspect rollout strategy and availability. Rollback does not restore external database changes; treat migrations separately.</p>
+<h3>Structured troubleshooting method</h3><ol><li>Identify the scope and customer impact.</li><li>Capture Pod status, node status and events.</li><li>Inspect resource descriptions and logs.</li><li>Compare the current state with the desired configuration.</li><li>Check recent changes and dependencies.</li><li>Apply a controlled correction.</li><li>Verify recovery and document the root cause.</li></ol></section>
+<section><h2>9. Production Considerations</h2><ul><li>Use least privilege and protect credentials.</li><li>Use resource requests and limits where appropriate.</li><li>Validate changes in a non-production environment.</li><li>Monitor application health and infrastructure health.</li><li>Maintain backups for important stateful data.</li><li>Document ownership, recovery and rollback procedures.</li></ul></section>
+<section><h2>10. Interview Questions and Answers</h2><ol><li>What is a ReplicaSet?<br><strong>Study answer:</strong> Explain the relevant definition, workflow, operational impact and a practical example from this lesson.</li><li>How does a Deployment use ReplicaSets?<br><strong>Study answer:</strong> Explain the relevant definition, workflow, operational impact and a practical example from this lesson.</li><li>What is a rolling update?<br><strong>Study answer:</strong> Explain the relevant definition, workflow, operational impact and a practical example from this lesson.</li><li>How do you roll back a Deployment?<br><strong>Study answer:</strong> Explain the relevant definition, workflow, operational impact and a practical example from this lesson.</li></ol></section>
+<section><h2>11. Homework</h2><ol><li>Explain the main concepts in your own words.</li><li>Draw a labelled architecture or workflow diagram.</li><li>Recreate the practical example in a lab.</li><li>Capture command output and explain the result.</li><li>Describe one failure scenario and how you would diagnose it.</li><li>Prepare answers to all interview questions.</li></ol>
+<h3>Student Evaluation</h3><table><tr><th>Area</th><th>Marks</th></tr><tr><td>Concept understanding</td><td>20</td></tr><tr><td>Architecture and workflow</td><td>20</td></tr><tr><td>Practical lab</td><td>25</td></tr><tr><td>Troubleshooting</td><td>20</td></tr><tr><td>Interview and homework</td><td>15</td></tr><tr><th>Total</th><th>100</th></tr></table>
+<div class="callout"><strong>Revision:</strong> Be able to explain the topic, demonstrate it, verify it and troubleshoot it without blindly copying commands.</div></section>
+</main><footer>KubeMindAI – Kubernetes Engineer Academy · Day 04<br><span class="small">Training documentation for educational use. Validate versions, permissions and environment-specific settings before production use.</span></footer>
+
+<style id="kubemind-simulator-css">
+.km-sim{background:#0b1220;color:#e5e7eb;border-radius:14px;padding:20px;margin:25px 0;font-family:Arial,sans-serif}
+.km-sim h2,.km-sim h3{color:#93c5fd;margin-top:8px}
+.km-sim p{color:#cbd5e1}
+.km-sim .km-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.km-sim button{background:#2563eb;color:white;border:0;border-radius:7px;padding:9px 12px;cursor:pointer}
+.km-sim button:hover{background:#1d4ed8}
+.km-sim .km-fault{background:#9a3412}
+.km-sim .km-reset{background:#475569}
+.km-sim .km-terminal{background:#020617;border:1px solid #334155;border-radius:8px;padding:14px;min-height:220px;max-height:380px;overflow:auto;white-space:pre-wrap;font:13px/1.6 Menlo,Consolas,monospace;color:#d1fae5}
+.km-sim input{width:100%;box-sizing:border-box;background:#020617;color:white;border:1px solid #475569;padding:12px;border-radius:7px;margin-top:10px;font-family:monospace}
+.km-sim .km-hint{font-size:13px;color:#94a3b8}
+.km-sim .km-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.km-sim .km-card{background:#172033;border:1px solid #334155;border-radius:8px;padding:12px}
+.km-sim .km-good{color:#86efac}.km-sim .km-bad{color:#fca5a5}
+@media(max-width:600px){.km-sim .km-row{grid-template-columns:1fr}}
+</style>
+
+
+<section class="km-sim-callout"><h2>Practice in the browser simulator</h2><p>Practise Linux, Docker, kubectl and Helm commands, inspect simulated cluster state, inject failures and complete the 20-question assessment. Commands are simulated only.</p><p><a href="../simulator/KubeMindAI-Student-Simulator.html">Launch KubeMindAI Student Simulator →</a></p><button type="button" class="km-complete" data-complete-day="4">Mark Day 04 complete</button><span class="km-complete-status" aria-live="polite"></span></section><script src="../assets/js/academy.js" defer></script></body></html>

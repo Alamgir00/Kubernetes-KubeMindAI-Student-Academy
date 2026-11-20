@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KubeMindAI Day 00 — Environment Setup</title>
+<style>
+body{margin:0;background:#f2f5fa;color:#243247;font:16px/1.7 Arial,sans-serif}
+header{background:linear-gradient(130deg,#10243a,#174c80);color:white;padding:40px 6%}
+main{max-width:980px;margin:25px auto;padding:0 18px}
+section,nav{background:white;border:1px solid #dbe3ed;border-radius:12px;padding:22px;margin-bottom:18px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.15}
+h2{color:#10243a;border-bottom:2px solid #e5edf7;padding-bottom:8px}
+h3{color:#174c80;margin-top:23px}
+pre{background:#111827;color:#e5e7eb;padding:16px;border-radius:8px;overflow:auto;font-size:13px}
+code{font-family:Consolas,monospace}
+.callout{background:#eef4ff;border-left:4px solid #2563eb;padding:13px;margin:15px 0}
+.warning{background:#fff7ed;border-left-color:#b45309}
+table{border-collapse:collapse;width:100%;margin:14px 0}
+td,th{border:1px solid #dbe3ed;padding:9px;text-align:left;vertical-align:top}
+th{background:#eaf1fa}
+.diagram{background:#f8fafc;border:1px solid #dbe3ed;border-radius:8px;padding:16px;text-align:center}
+.node{display:inline-block;border:2px solid #8bb5ed;background:white;padding:10px;margin:5px;border-radius:8px;font-weight:bold}
+.small{color:#64748b;font-size:13px}
+footer{text-align:center;background:#10243a;color:white;padding:22px}
+@media print{header{print-color-adjust:exact}section,nav{break-inside:avoid}pre{white-space:pre-wrap;print-color-adjust:exact}}
+</style><link rel="stylesheet" href="../assets/css/academy.css">
+</head><body>
+<header><div class="small" style="color:#a5e9f5">KUBEMINDAI · KUBERNETES ENGINEER ACADEMY</div>
+<h1>Day 00: Environment Setup</h1><p>Prepare your Mac, tools, AWS account and Kubernetes lab</p>
+<p>Student learning duration: 1–3 hours · Beginner-to-production learning path</p><nav class="academy-nav"><a href="../index.html">Academy Home</a><a href="../simulator/KubeMindAI-Student-Simulator.html">Open Training Simulator</a><a href="Day-20.html">Previous Day</a><a href="Day-01.html">Next Day</a></nav></header>
+<main>
+<nav><strong>Lesson sections</strong><ol>
+<li>Learning objectives</li><li>Concepts and explanations</li><li>Architecture and workflow</li>
+<li>Commands and practical lab</li><li>YAML example</li><li>Verification</li>
+<li>Troubleshooting</li><li>Production considerations</li><li>Interview questions</li><li>Homework and evaluation</li>
+</ol></nav>
+<section><h2>1. Learning Objectives</h2><ul><li>Prepare a reliable learning environment</li><li>understand local versus cloud Kubernetes</li><li>install and verify the command-line tools</li><li>prepare two Ubuntu EC2 instances for a self-managed kubeadm cluster.</li></ul>
+<div class="callout">Study the concepts first, then perform the lab in a disposable training environment. Understand every command before running it.</div></section>
+<section><h2>2. Concepts and Technical Explanations</h2><h3>Local environment</h3><p>Your Mac is the administration workstation. You use its terminal, kubectl, SSH and browser to manage Kubernetes.</p><h3>kubectl</h3><p>The Kubernetes command-line client. It sends API requests to the cluster configured in your kubeconfig.</p><h3>kubeconfig</h3><p>A configuration file containing cluster endpoints, credentials and contexts. Treat it as sensitive.</p><h3>Local cluster</h3><p>Kind or Minikube is useful for quick exercises. It is not the same as two independent EC2 machines.</p><h3>AWS lab</h3><p>Two Ubuntu EC2 instances in one VPC will be used for the self-managed kubeadm cluster: one control plane and one worker.</p></section>
+<section><h2>3. Architecture and Workflow</h2>
+<p>Understand how this day's Kubernetes topic fits into the overall cluster. Follow the request, resource or workload from its configuration through Kubernetes processing to its observable result.</p>
+<div class="diagram"><div class="node">Administrator / Git / Application</div><div>↓</div><div class="node">Kubernetes API Server</div><div>↓</div><div class="node">Controllers and Cluster Components</div><div>↓</div><div class="node">Worker Nodes and Workloads</div><div>↓</div><div class="node">Verification and Operations</div></div>
+<p>The exact components involved depend on the resource and cluster configuration. Use <code>kubectl describe</code>, events and logs to verify actual behavior.</p></section>
+<section><section class="km-explorer" data-km-config='{&quot;day&quot;:0,&quot;title&quot;:&quot;Environment Setup&quot;,&quot;nodes&quot;:[{&quot;name&quot;:&quot;Mac/Linux workstation&quot;,&quot;description&quot;:&quot;Student workstation with terminal, editor, Docker, browser and local learning tools&quot;},{&quot;name&quot;:&quot;kubectl CLI&quot;,&quot;description&quot;:&quot;Builds requests using the selected kubeconfig context&quot;},{&quot;name&quot;:&quot;Credentials&quot;,&quot;description&quot;:&quot;Client certificate, token or cloud identity plugin&quot;},{&quot;name&quot;:&quot;Kubernetes API&quot;,&quot;description&quot;:&quot;Authenticated endpoint for the selected cluster&quot;},{&quot;name&quot;:&quot;Local / cloud cluster&quot;,&quot;description&quot;:&quot;Control plane and worker nodes receive workloads&quot;}],&quot;steps&quot;:[&quot;Prepare workstation and shell&quot;,&quot;Install or verify container tooling&quot;,&quot;Install kubectl and configure trusted context&quot;,&quot;Create a local or cloud training cluster&quot;,&quot;Verify connectivity and version compatibility&quot;],&quot;edges&quot;:[&quot;Prepare workstation and &quot;,&quot;Install or verify contai&quot;,&quot;Create a local or cloud &quot;,&quot;Verify connectivity and &quot;],&quot;failure&quot;:&quot;Environment drift or wrong kubeconfig context&quot;,&quot;recovery&quot;:&quot;Check kubectl config current-context, tool versions and credentials before targeting a cluster.&quot;}'><h2>Architecture Explorer &amp; Operational Flow</h2><p class="small">Explore the topic-specific architecture, click components for explanations, and follow the synchronized operational sequence.</p><div class="km-layout"><div class="km-visual"><div class="km-visual-head"><strong>Architecture view · Day 00</strong><span class="km-stage">Ready</span></div><div class="km-svg-scroll"><svg class="km-svg" role="img" aria-label="Environment Setup Kubernetes architecture"></svg></div><div class="km-component-info" aria-live="polite"><strong>Select a component</strong><p>Component responsibility appears here.</p></div></div><div class="km-flow"><div class="km-visual-head"><strong>Operational flow</strong><span class="km-progress-label">0 / 5</span></div><p class="km-current-step" aria-live="polite">Press Play or Next to start.</p><div class="km-controls"><button type="button" data-km="play">▶ Play</button><button type="button" data-km="pause">Ⅱ Pause</button><button type="button" data-km="prev">← Previous</button><button type="button" data-km="next">Next →</button><button type="button" data-km="restart">↺ Restart</button><label>Speed <select data-km="speed"><option value="2400">0.5×</option><option value="1400" selected>1×</option><option value="700">2×</option><option value="350">4×</option></select></label></div><ol class="km-step-list"><li>Prepare workstation and shell</li><li>Install or verify container tooling</li><li>Install kubectl and configure trusted context</li><li>Create a local or cloud training cluster</li><li>Verify connectivity and version compatibility</li></ol></div></div>
+<div class="km-resilience-note"><strong>Failure checkpoint:</strong> Environment drift or wrong kubeconfig context<br><strong>Recovery path:</strong> Check kubectl config current-context, tool versions and credentials before targeting a cluster.</div></section><h2>4. Important Commands</h2><pre><code># Check Mac architecture and Python
+uname -m
+python3 --version
+
+# Check or install command-line tools using official vendor instructions
+git --version
+docker --version
+kubectl version --client
+helm version
+
+# Create a workspace
+mkdir -p ~/k8s/KubeMindAI/labs
+cd ~/k8s/KubeMindAI
+
+# Check SSH
+ssh -V
+
+# After downloading your EC2 key, restrict its permissions
+chmod 400 ~/Downloads/kubemindai-key.pem</code></pre>
+<p>Run commands in the correct cluster context and namespace. Replace example names with the actual names returned by your cluster.</p></section>
+<section><h2>5. YAML Example</h2><pre><code># Example SSH configuration on your Mac: ~/.ssh/config
+Host k8s-control
+    HostName CONTROL_PLANE_PUBLIC_IP
+    User ubuntu
+    IdentityFile ~/Downloads/kubemindai-key.pem
+
+Host k8s-worker
+    HostName WORKER_PUBLIC_IP
+    User ubuntu
+    IdentityFile ~/Downloads/kubemindai-key.pem</code></pre>
+<p>Review the API version, kind, metadata, selectors, labels, Pod template and container configuration. Save the example as a YAML file before applying it. Adapt placeholders to your environment.</p></section>
+<section><h2>6. Hands-on Practical Lab</h2><p>On the Mac, verify Python, Git, Docker, kubectl and Helm. Install each using its official vendor instructions. In AWS, create a VPC with a private subnet and suitable route/NAT design. Launch two Ubuntu Server 24.04 LTS x86_64 EC2 instances in the same VPC. Record private IPs. Restrict SSH to approved administrator IPs. Permit Kubernetes API traffic only from trusted cluster sources. Permit kubelet and Flannel VXLAN traffic only between cluster nodes. Install containerd and kubeadm prerequisites on both nodes. Initialize the control plane, install Flannel, join the worker and verify both nodes become Ready. This is a learning cluster, not a highly available production design.</p>
+<h3>Suggested lab sequence</h3><ol><li>Verify your current Kubernetes context.</li><li>Inspect existing resources before changing anything.</li><li>Create the lab resources using the supplied YAML.</li><li>Watch the resource status and Kubernetes events.</li><li>Test the expected behavior.</li><li>Record the output and explain what happened.</li><li>Clean up only resources created for this exercise.</li></ol></section>
+<section><h2>7. Verification and Expected Results</h2><pre><code>On Mac: uname -m; python3 --version; git --version; docker --version; kubectl version --client; helm version. On EC2: hostnamectl; ip -br address; systemctl status containerd; systemctl status kubelet. After cluster setup: kubectl get nodes -o wide; kubectl get pods -A.</code></pre>
+<p>Success means the expected resource state and behavior are visible. A command returning successfully is not sufficient if the workload is not healthy.</p></section>
+<section><h2>8. Troubleshooting Scenarios</h2><p>SSH timeout: inspect routes, public access path, security groups and NACLs. Permission denied: check key path, chmod 400 and Ubuntu username. kubeadm preflight error: inspect swap, kernel modules, sysctl, ports and runtime configuration. Worker NotReady: verify Flannel, private IP reachability, containerd and kubelet. Do not expose etcd or kubelet publicly. Keep the kubeconfig and SSH private key confidential.</p>
+<h3>Structured troubleshooting method</h3><ol><li>Identify the scope and customer impact.</li><li>Capture Pod status, node status and events.</li><li>Inspect resource descriptions and logs.</li><li>Compare the current state with the desired configuration.</li><li>Check recent changes and dependencies.</li><li>Apply a controlled correction.</li><li>Verify recovery and document the root cause.</li></ol></section>
+<section><h2>9. Production Considerations</h2><ul><li>Use least privilege and protect credentials.</li><li>Use resource requests and limits where appropriate.</li><li>Validate changes in a non-production environment.</li><li>Monitor application health and infrastructure health.</li><li>Maintain backups for important stateful data.</li><li>Document ownership, recovery and rollback procedures.</li></ul></section>
+<section><h2>10. Interview Questions and Answers</h2><ol><li>What is kubectl?<br><strong>Study answer:</strong> Explain the relevant definition, workflow, operational impact and a practical example from this lesson.</li><li>What information is stored in kubeconfig?<br><strong>Study answer:</strong> Explain the relevant definition, workflow, operational impact and a practical example from this lesson.</li><li>What is the difference between Kind and an EC2-based cluster?<br><strong>Study answer:</strong> Explain the relevant definition, workflow, operational impact and a practical example from this lesson.</li><li>Why should SSH keys and kubeconfig files be protected?<br><strong>Study answer:</strong> Explain the relevant definition, workflow, operational impact and a practical example from this lesson.</li></ol></section>
+<section><h2>11. Homework</h2><ol><li>Explain the main concepts in your own words.</li><li>Draw a labelled architecture or workflow diagram.</li><li>Recreate the practical example in a lab.</li><li>Capture command output and explain the result.</li><li>Describe one failure scenario and how you would diagnose it.</li><li>Prepare answers to all interview questions.</li></ol>
+<h3>Student Evaluation</h3><table><tr><th>Area</th><th>Marks</th></tr><tr><td>Concept understanding</td><td>20</td></tr><tr><td>Architecture and workflow</td><td>20</td></tr><tr><td>Practical lab</td><td>25</td></tr><tr><td>Troubleshooting</td><td>20</td></tr><tr><td>Interview and homework</td><td>15</td></tr><tr><th>Total</th><th>100</th></tr></table>
+<div class="callout"><strong>Revision:</strong> Be able to explain the topic, demonstrate it, verify it and troubleshoot it without blindly copying commands.</div></section>
+</main><footer>KubeMindAI – Kubernetes Engineer Academy · Day 00<br><span class="small">Training documentation for educational use. Validate versions, permissions and environment-specific settings before production use.</span></footer>
+
+<style id="kubemind-simulator-css">
+.km-sim{background:#0b1220;color:#e5e7eb;border-radius:14px;padding:20px;margin:25px 0;font-family:Arial,sans-serif}
+.km-sim h2,.km-sim h3{color:#93c5fd;margin-top:8px}
+.km-sim p{color:#cbd5e1}
+.km-sim .km-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.km-sim button{background:#2563eb;color:white;border:0;border-radius:7px;padding:9px 12px;cursor:pointer}
+.km-sim button:hover{background:#1d4ed8}
+.km-sim .km-fault{background:#9a3412}
+.km-sim .km-reset{background:#475569}
+.km-sim .km-terminal{background:#020617;border:1px solid #334155;border-radius:8px;padding:14px;min-height:220px;max-height:380px;overflow:auto;white-space:pre-wrap;font:13px/1.6 Menlo,Consolas,monospace;color:#d1fae5}
+.km-sim input{width:100%;box-sizing:border-box;background:#020617;color:white;border:1px solid #475569;padding:12px;border-radius:7px;margin-top:10px;font-family:monospace}
+.km-sim .km-hint{font-size:13px;color:#94a3b8}
+.km-sim .km-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.km-sim .km-card{background:#172033;border:1px solid #334155;border-radius:8px;padding:12px}
+.km-sim .km-good{color:#86efac}.km-sim .km-bad{color:#fca5a5}
+@media(max-width:600px){.km-sim .km-row{grid-template-columns:1fr}}
+</style>
+
+
+<section class="km-sim-callout"><h2>Practice in the browser simulator</h2><p>Practise Linux, Docker, kubectl and Helm commands, inspect simulated cluster state, inject failures and complete the 20-question assessment. Commands are simulated only.</p><p><a href="../simulator/KubeMindAI-Student-Simulator.html">Launch KubeMindAI Student Simulator →</a></p><button type="button" class="km-complete" data-complete-day="0">Mark Day 00 complete</button><span class="km-complete-status" aria-live="polite"></span></section><script src="../assets/js/academy.js" defer></script></body></html>

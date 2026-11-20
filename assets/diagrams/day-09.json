@@ -1,0 +1,41 @@
+{
+  "day": 9,
+  "topic": "StatefulSets",
+  "components": [
+    {
+      "name": "Headless Service",
+      "description": "Stable DNS identity for StatefulSet Pods"
+    },
+    {
+      "name": "StatefulSet controller",
+      "description": "Maintains ordered identities and rollout semantics"
+    },
+    {
+      "name": "Pod ordinal",
+      "description": "Stable names such as database-0 and database-1"
+    },
+    {
+      "name": "PVC template",
+      "description": "Creates per-replica persistent volume claims"
+    },
+    {
+      "name": "Storage backend",
+      "description": "Retains each replica's data across Pod replacement"
+    }
+  ],
+  "connections": [
+    "Create headless Service",
+    "Create StatefulSet with ",
+    "Pods mount per-replica P",
+    "Scale / replace Pod and "
+  ],
+  "operational_steps": [
+    "Create headless Service",
+    "Create StatefulSet with claim template",
+    "Controller assigns stable ordinal identities",
+    "Pods mount per-replica PVCs",
+    "Scale / replace Pod and verify identity + data"
+  ],
+  "failure_checkpoint": "Stateful Pod identity or storage claim mismatch",
+  "recovery_path": "Check headless Service, StatefulSet ordinals and per-Pod PVC binding before replacing a replica."
+}

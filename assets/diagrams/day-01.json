@@ -1,0 +1,60 @@
+{
+  "day": 1,
+  "topic": "Kubernetes Architecture and Fundamentals",
+  "components": [
+    {
+      "name": "kubectl client",
+      "description": "Reads kubeconfig, discovers API resources and sends requests"
+    },
+    {
+      "name": "API server",
+      "description": "Front door; authentication, authorization, admission and API operations"
+    },
+    {
+      "name": "etcd",
+      "description": "Durable backing store for cluster API objects"
+    },
+    {
+      "name": "Scheduler",
+      "description": "Binds unscheduled Pods to eligible nodes"
+    },
+    {
+      "name": "Controller manager",
+      "description": "Runs reconciliation controllers"
+    },
+    {
+      "name": "Worker kubelet",
+      "description": "Watches assigned Pods and manages node lifecycle"
+    },
+    {
+      "name": "Container runtime",
+      "description": "CRI implementation pulls images and starts containers"
+    },
+    {
+      "name": "Pod network",
+      "description": "CNI provides Pod connectivity; Service dataplane routes traffic"
+    }
+  ],
+  "connections": [
+    "loads kubeconfig and sel",
+    "Client discovers the tar",
+    "Authorization and admiss",
+    "API server validates and",
+    "Controllers reconcile de",
+    "Kubelet and runtime star",
+    "Networking and readiness"
+  ],
+  "operational_steps": [
+    "kubectl loads kubeconfig and selects context",
+    "Client discovers the target API resource",
+    "API server authenticates the caller",
+    "Authorization and admission policy checks run",
+    "API server validates and persists API objects",
+    "Controllers reconcile desired state",
+    "Scheduler binds Pods to nodes",
+    "Kubelet and runtime start containers",
+    "Networking and readiness make workloads reachable"
+  ],
+  "failure_checkpoint": "API server unavailable or etcd unhealthy",
+  "recovery_path": "Check control-plane health and API endpoint reachability; restore control-plane dependencies before retrying workloads."
+}

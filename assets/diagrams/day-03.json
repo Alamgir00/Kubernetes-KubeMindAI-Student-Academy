@@ -1,0 +1,47 @@
+{
+  "day": 3,
+  "topic": "Pods and Container Lifecycle",
+  "components": [
+    {
+      "name": "Pod manifest",
+      "description": "Declares containers, image, ports and volumes"
+    },
+    {
+      "name": "API server",
+      "description": "Validates and stores Pod object"
+    },
+    {
+      "name": "Scheduler",
+      "description": "Selects a node and binds the Pod"
+    },
+    {
+      "name": "Kubelet",
+      "description": "Reconciles assigned Pod on the node"
+    },
+    {
+      "name": "CRI runtime",
+      "description": "Creates sandbox, pulls image and starts containers"
+    },
+    {
+      "name": "Pod lifecycle",
+      "description": "Pending \u2192 Running \u2192 Succeeded / Failed; restarts depend on policy"
+    }
+  ],
+  "connections": [
+    "Submit Pod manifest to A",
+    "API server validates and",
+    "Scheduler binds Pod to a",
+    "CRI creates sandbox and ",
+    "Observe phase, condition"
+  ],
+  "operational_steps": [
+    "Submit Pod manifest to API server",
+    "API server validates and persists Pod object",
+    "Scheduler binds Pod to an eligible node",
+    "Kubelet observes Pod assignment",
+    "CRI creates sandbox and starts container",
+    "Observe phase, conditions, events and restart behaviour"
+  ],
+  "failure_checkpoint": "Image pull or container startup failure",
+  "recovery_path": "Use kubectl describe pod and logs; correct image, runtime configuration or application startup."
+}

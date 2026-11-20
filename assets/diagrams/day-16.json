@@ -1,0 +1,46 @@
+{
+  "day": 16,
+  "topic": "Helm",
+  "components": [
+    {
+      "name": "Chart + values.yaml",
+      "description": "Package templates, defaults and dependencies"
+    },
+    {
+      "name": "Helm client",
+      "description": "Combines chart and values; renders Kubernetes manifests"
+    },
+    {
+      "name": "API server",
+      "description": "Receives rendered resource create / patch operations"
+    },
+    {
+      "name": "Release storage",
+      "description": "Tracks release revision and values in cluster storage"
+    },
+    {
+      "name": "Workload controllers",
+      "description": "Reconcile Deployments, Services and Pods"
+    },
+    {
+      "name": "Rollback",
+      "description": "Applies a prior release revision when safe"
+    }
+  ],
+  "connections": [
+    "Select chart and environ",
+    "Render templates to insp",
+    "Install release and insp",
+    "Upgrade values / chart v",
+    "Inspect release history "
+  ],
+  "operational_steps": [
+    "Select chart and environment values",
+    "Render templates to inspect manifests",
+    "Install release and inspect resources",
+    "Upgrade values / chart version",
+    "Inspect release history and rollback safely"
+  ],
+  "failure_checkpoint": "Helm render or release upgrade fails",
+  "recovery_path": "Run helm lint and helm template first; inspect release history and rollback only after impact review."
+}

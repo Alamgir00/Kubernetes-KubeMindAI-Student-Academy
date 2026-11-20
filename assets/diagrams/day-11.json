@@ -1,0 +1,46 @@
+{
+  "day": 11,
+  "topic": "Requests, Limits and Autoscaling",
+  "components": [
+    {
+      "name": "Metrics API",
+      "description": "Provides resource metrics, commonly via metrics-server"
+    },
+    {
+      "name": "HPA controller",
+      "description": "Compares observed metrics with target utilization"
+    },
+    {
+      "name": "Scale subresource",
+      "description": "Adjusts desired replicas on workload"
+    },
+    {
+      "name": "Scheduler",
+      "description": "Places Pods using requests and constraints"
+    },
+    {
+      "name": "Kubelet + cgroups",
+      "description": "Enforces CPU / memory limits; memory limit breach may OOM-kill"
+    },
+    {
+      "name": "Pods",
+      "description": "Replica count responds to scaling and scheduling capacity"
+    }
+  ],
+  "connections": [
+    "Set CPU / memory request",
+    "Scheduler filters nodes ",
+    "Metrics API exposes obse",
+    "HPA computes desired rep",
+    "Scale workload and obser"
+  ],
+  "operational_steps": [
+    "Set CPU / memory requests and limits",
+    "Scheduler filters nodes by requests and constraints",
+    "Metrics API exposes observed usage",
+    "HPA computes desired replica count",
+    "Scale workload and observe capacity / throttling"
+  ],
+  "failure_checkpoint": "CPU throttling, OOM kill or HPA not scaling",
+  "recovery_path": "Compare requests/limits with metrics, inspect HPA events and confirm Metrics API availability."
+}

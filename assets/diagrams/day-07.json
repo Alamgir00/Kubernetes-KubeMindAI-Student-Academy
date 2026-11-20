@@ -1,0 +1,41 @@
+{
+  "day": 7,
+  "topic": "ConfigMaps and Secrets",
+  "components": [
+    {
+      "name": "ConfigMap / Secret",
+      "description": "Stores non-secret config or sensitive values"
+    },
+    {
+      "name": "API server + etcd",
+      "description": "Stores API objects; Secret data is base64 encoded, not encrypted by itself"
+    },
+    {
+      "name": "Pod specification",
+      "description": "References keys via env, envFrom or volume mounts"
+    },
+    {
+      "name": "Kubelet",
+      "description": "Projects config into container environment or mounted files"
+    },
+    {
+      "name": "Application process",
+      "description": "Reads configuration; reload behaviour depends on app"
+    }
+  ],
+  "connections": [
+    "Create ConfigMap and Sec",
+    "Reference keys in Pod en",
+    "Application reads config",
+    "Rotate / update config a"
+  ],
+  "operational_steps": [
+    "Create ConfigMap and Secret objects",
+    "Reference keys in Pod environment or volumes",
+    "Kubelet projects values to container",
+    "Application reads configuration",
+    "Rotate / update config and verify reload semantics"
+  ],
+  "failure_checkpoint": "Missing configuration key or Secret access denied",
+  "recovery_path": "Verify key names, Pod references and least-privilege RBAC; rotate credentials safely."
+}

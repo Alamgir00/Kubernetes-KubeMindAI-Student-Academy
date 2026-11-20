@@ -1,0 +1,47 @@
+{
+  "day": 8,
+  "topic": "Persistent Volumes and Storage",
+  "components": [
+    {
+      "name": "Pod + PVC",
+      "description": "Workload requests storage using a claim"
+    },
+    {
+      "name": "StorageClass",
+      "description": "Defines dynamic provisioning policy and parameters"
+    },
+    {
+      "name": "CSI controller",
+      "description": "Provisioner creates / attaches backend volume"
+    },
+    {
+      "name": "PersistentVolume",
+      "description": "Cluster resource representing provisioned storage"
+    },
+    {
+      "name": "CSI node plugin",
+      "description": "Stages and mounts volume on selected node"
+    },
+    {
+      "name": "Storage backend",
+      "description": "Cloud block, file or network storage retains data"
+    }
+  ],
+  "connections": [
+    "Create PVC referencing S",
+    "CSI provisioner creates ",
+    "PV binds to PVC",
+    "CSI node plugin mounts v",
+    "Pod writes data and vali"
+  ],
+  "operational_steps": [
+    "Create PVC referencing StorageClass",
+    "CSI provisioner creates backend volume",
+    "PV binds to PVC",
+    "Scheduler accounts for volume topology",
+    "CSI node plugin mounts volume",
+    "Pod writes data and validates persistence"
+  ],
+  "failure_checkpoint": "PVC Pending or volume mount failure",
+  "recovery_path": "Inspect PVC/PV events and CSI controller/node plugin health; resolve topology, capacity or attachment issues."
+}

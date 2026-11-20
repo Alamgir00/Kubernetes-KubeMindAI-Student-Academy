@@ -1,0 +1,41 @@
+{
+  "day": 14,
+  "topic": "DaemonSets, Jobs and CronJobs",
+  "components": [
+    {
+      "name": "CronJob controller",
+      "description": "Creates Jobs on schedule"
+    },
+    {
+      "name": "Job controller",
+      "description": "Creates Pods and tracks completion / retry policy"
+    },
+    {
+      "name": "Pod",
+      "description": "Runs batch command to completion"
+    },
+    {
+      "name": "DaemonSet controller",
+      "description": "Ensures a Pod on each eligible node"
+    },
+    {
+      "name": "Node agents",
+      "description": "Logging, monitoring, CNI or security agents run node-wide"
+    }
+  ],
+  "connections": [
+    "CronJob schedule creates",
+    "Job ctrl creates worker ",
+    "DaemonSet ensures node-l",
+    "Verify retries, history "
+  ],
+  "operational_steps": [
+    "CronJob schedule creates Job",
+    "Job controller creates worker Pod",
+    "Pod runs batch task and reports completion",
+    "DaemonSet ensures node-level Pod presence",
+    "Verify retries, history and node coverage"
+  ],
+  "failure_checkpoint": "Job retries or CronJob misses its schedule",
+  "recovery_path": "Inspect Job/Pod events, schedule, time zone, concurrency policy and backoff limits."
+}

@@ -1,0 +1,46 @@
+{
+  "day": 5,
+  "topic": "Services and Service Discovery",
+  "components": [
+    {
+      "name": "Client Pod",
+      "description": "Uses service DNS name or ClusterIP"
+    },
+    {
+      "name": "CoreDNS",
+      "description": "Resolves service.namespace.svc.cluster.local"
+    },
+    {
+      "name": "Service types: ClusterIP / NodePort / LoadBalancer",
+      "description": "Stable virtual IP or externally reachable exposure; routes to selected eligible Pod endpoints"
+    },
+    {
+      "name": "EndpointSlice controller",
+      "description": "Tracks eligible Pod IPs and ports"
+    },
+    {
+      "name": "Service dataplane",
+      "description": "kube-proxy or eBPF implementation forwards traffic"
+    },
+    {
+      "name": "Backend Pods",
+      "description": "Receive connections when Ready and eligible"
+    }
+  ],
+  "connections": [
+    "Client resolves Service ",
+    "Service virtual IP recei",
+    "Service dataplane select",
+    "EndpointSlice supplies r",
+    "Pod receives request and"
+  ],
+  "operational_steps": [
+    "Client resolves Service DNS name",
+    "Service virtual IP receives connection",
+    "Service dataplane selects an eligible endpoint",
+    "EndpointSlice supplies ready Pod addresses",
+    "Pod receives request and returns response"
+  ],
+  "failure_checkpoint": "Service has no endpoints",
+  "recovery_path": "Compare Service selectors with Pod labels and verify backend Pod readiness and EndpointSlices."
+}

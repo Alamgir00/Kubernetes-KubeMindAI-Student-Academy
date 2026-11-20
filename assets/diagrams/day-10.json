@@ -1,0 +1,41 @@
+{
+  "day": 10,
+  "topic": "Health Checks and Probes",
+  "components": [
+    {
+      "name": "Container starts",
+      "description": "Process begins in the Pod sandbox"
+    },
+    {
+      "name": "Startup probe",
+      "description": "Protects slow-starting applications from early liveness checks"
+    },
+    {
+      "name": "Liveness probe",
+      "description": "Detects stuck process; kubelet restarts container after threshold"
+    },
+    {
+      "name": "Readiness probe",
+      "description": "Controls whether Pod is eligible for Service traffic"
+    },
+    {
+      "name": "Pod conditions",
+      "description": "Reflect readiness and lifecycle state to controllers / endpoints"
+    }
+  ],
+  "connections": [
+    "Container process starts",
+    "Startup probe gates othe",
+    "Readiness probe toggles ",
+    "Observe restart and Endp"
+  ],
+  "operational_steps": [
+    "Container process starts",
+    "Startup probe gates other probe checks",
+    "Liveness probe detects unrecoverable hang",
+    "Readiness probe toggles traffic eligibility",
+    "Observe restart and EndpointSlice changes"
+  ],
+  "failure_checkpoint": "Probe misconfiguration causes restarts or traffic removal",
+  "recovery_path": "Check probe path, port, thresholds and startup timing; verify the application health endpoint."
+}

@@ -1,0 +1,125 @@
+{
+  "day": 4,
+  "topic": "ReplicaSets and Deployments",
+  "components": [
+    {
+      "name": "kubectl client",
+      "description": "Reads deployment.yaml, resolves context and credentials, discovers the API resource, and sends the apply request"
+    },
+    {
+      "name": "API server",
+      "description": "Receives the REST request and coordinates the API request pipeline"
+    },
+    {
+      "name": "Authentication",
+      "description": "Establishes the caller identity from configured credentials or identity integration"
+    },
+    {
+      "name": "Authorization",
+      "description": "Checks whether the identity may create or patch Deployments in the namespace"
+    },
+    {
+      "name": "Mutating admission",
+      "description": "Applicable admission plugins or webhooks can default or mutate the object"
+    },
+    {
+      "name": "API validation",
+      "description": "Checks schema, field types, required values and Kubernetes API invariants"
+    },
+    {
+      "name": "Validating admission",
+      "description": "Applicable policy plugins or webhooks can reject the object"
+    },
+    {
+      "name": "Apply field manager",
+      "description": "Calculates client-side patch or server-side apply ownership and conflict checks"
+    },
+    {
+      "name": "etcd",
+      "description": "Persists accepted desired Deployment state in the control-plane backing store"
+    },
+    {
+      "name": "Deployment controller",
+      "description": "Observes Deployment changes and creates or updates a ReplicaSet revision"
+    },
+    {
+      "name": "ReplicaSet controller",
+      "description": "Creates or removes Pod API objects to converge on desired replicas"
+    },
+    {
+      "name": "Scheduler",
+      "description": "Filters and scores nodes, then binds each unscheduled Pod to an eligible node"
+    },
+    {
+      "name": "Worker node + kubelet",
+      "description": "Kubelet observes assigned Pods and coordinates local Pod lifecycle"
+    },
+    {
+      "name": "Container runtime (CRI)",
+      "description": "Creates Pod sandbox, pulls images and starts containers"
+    },
+    {
+      "name": "CNI plugin",
+      "description": "Configures Pod IP address and network connectivity during sandbox setup"
+    },
+    {
+      "name": "Pod + probes",
+      "description": "Containers run; startup, liveness and readiness probes report health"
+    },
+    {
+      "name": "EndpointSlice controller",
+      "description": "Publishes current eligible Pod IP and port endpoints for Services"
+    },
+    {
+      "name": "EndpointSlices",
+      "description": "Store the ready backend endpoint set for a Service"
+    },
+    {
+      "name": "Service dataplane",
+      "description": "kube-proxy or eBPF dataplane routes Service traffic to eligible Pod endpoints"
+    }
+  ],
+  "connections": [
+    "reads deployment.yaml an",
+    "resolves kubeconfig cont",
+    "sends the create or patc",
+    "API server receives the ",
+    "Authentication identifie",
+    "Authorization checks the",
+    "Mutating admission appli",
+    "API validation checks sc",
+    "Validating admission eva",
+    "etcd persists the accept",
+    "Deployment ctrl observes",
+    "ReplicaSet ctrl creates ",
+    "Scheduler selects eligib",
+    "Worker kubelet observes ",
+    "CRI runtime creates Pod ",
+    "Startup, liveness and re",
+    "EndpointSlice ctrl updat",
+    "Service dataplane routes"
+  ],
+  "operational_steps": [
+    "kubectl reads deployment.yaml and parses the Kubernetes object",
+    "kubectl resolves kubeconfig context, namespace, credentials and API resource mapping",
+    "kubectl sends the create or patch request to the API server",
+    "API server receives the request and establishes the request pipeline",
+    "Authentication identifies the caller",
+    "Authorization checks the requested verb and resource scope",
+    "Mutating admission applies applicable defaults or mutations",
+    "API validation checks schema and resource invariants",
+    "Validating admission evaluates applicable policy and can reject the request",
+    "Apply logic calculates patch / field ownership and detects conflicts",
+    "etcd persists the accepted desired Deployment state",
+    "Deployment controller observes the change and creates or updates a ReplicaSet",
+    "ReplicaSet controller creates the required Pod API objects",
+    "Scheduler selects eligible worker nodes and binds unscheduled Pods",
+    "Worker kubelet observes assigned Pods and prepares volumes",
+    "CRI runtime creates Pod sandbox and containers; CNI configures Pod networking",
+    "Startup, liveness and readiness probes operate according to their configuration",
+    "EndpointSlice controller updates the Service's eligible backend endpoint set",
+    "Service dataplane routes client traffic to ready Pod endpoints"
+  ],
+  "failure_checkpoint": "Forbidden apply, admission rejection or unschedulable Pods",
+  "recovery_path": "Check auth can-i, server dry-run and Pod events; fix permissions, policy or scheduling capacity."
+}

@@ -1,0 +1,47 @@
+{
+  "day": 15,
+  "topic": "Production Troubleshooting",
+  "components": [
+    {
+      "name": "Alert / symptom",
+      "description": "User impact or SLO signal triggers investigation"
+    },
+    {
+      "name": "API resources + events",
+      "description": "Check desired state, status, scheduling and recent events"
+    },
+    {
+      "name": "Node + kubelet",
+      "description": "Inspect Ready condition, pressure and runtime"
+    },
+    {
+      "name": "Pod logs + probes",
+      "description": "Check current / previous logs and health checks"
+    },
+    {
+      "name": "Network + storage",
+      "description": "Trace DNS, endpoints, CNI, PVC and mount path"
+    },
+    {
+      "name": "Root cause + mitigation",
+      "description": "Apply safe change, verify recovery and record learning"
+    }
+  ],
+  "connections": [
+    "Capture symptom and blas",
+    "Inspect workload status ",
+    "Check node health and sc",
+    "Trace service, DNS, endp",
+    "Mitigate, verify recover"
+  ],
+  "operational_steps": [
+    "Capture symptom and blast radius",
+    "Inspect workload status and events",
+    "Check node health and scheduling constraints",
+    "Inspect logs, probes and resource pressure",
+    "Trace service, DNS, endpoints and storage",
+    "Mitigate, verify recovery and document RCA"
+  ],
+  "failure_checkpoint": "Incident spans multiple layers and symptoms are misleading",
+  "recovery_path": "Start from user impact, correlate events/logs/metrics, isolate the failing layer and verify mitigation."
+}

@@ -1,0 +1,47 @@
+{
+  "day": 12,
+  "topic": "Networking, DNS and Ingress",
+  "components": [
+    {
+      "name": "External client",
+      "description": "Requests application endpoint"
+    },
+    {
+      "name": "Cloud load balancer",
+      "description": "Forwards external traffic to cluster ingress entry"
+    },
+    {
+      "name": "Ingress controller",
+      "description": "Watches Ingress and configures proxy routing"
+    },
+    {
+      "name": "Service",
+      "description": "Selects ready backend endpoints"
+    },
+    {
+      "name": "CNI / Pod network",
+      "description": "Provides Pod-to-Pod routing"
+    },
+    {
+      "name": "CoreDNS",
+      "description": "Resolves service and Pod DNS names"
+    }
+  ],
+  "connections": [
+    "Client enters through ex",
+    "Load balancer forwards t",
+    "Ingress rule selects hos",
+    "CNI carries traffic to P",
+    "CoreDNS resolves interna"
+  ],
+  "operational_steps": [
+    "Client enters through external endpoint",
+    "Load balancer forwards to ingress controller",
+    "Ingress rule selects host / path backend",
+    "Service selects ready Pod endpoints",
+    "CNI carries traffic to Pod",
+    "CoreDNS resolves internal service names"
+  ],
+  "failure_checkpoint": "DNS lookup, Ingress route or CNI connectivity failure",
+  "recovery_path": "Check CoreDNS, Ingress controller logs, Service endpoints, CNI health and network policy."
+}

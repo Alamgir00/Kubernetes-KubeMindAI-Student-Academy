@@ -1,0 +1,47 @@
+{
+  "day": 20,
+  "topic": "Monitoring, Observability and Capstone",
+  "components": [
+    {
+      "name": "Application Pods",
+      "description": "Expose application metrics, logs and traces"
+    },
+    {
+      "name": "Exporters",
+      "description": "Translate system / service telemetry into scrapeable metrics"
+    },
+    {
+      "name": "Prometheus",
+      "description": "Scrapes, stores time series and evaluates alert rules"
+    },
+    {
+      "name": "Alertmanager",
+      "description": "Groups, routes and silences alerts"
+    },
+    {
+      "name": "Grafana",
+      "description": "Queries data sources and renders dashboards"
+    },
+    {
+      "name": "Engineer + SLO",
+      "description": "Correlates signals, diagnoses and improves reliability"
+    }
+  ],
+  "connections": [
+    "Instrument application a",
+    "Exporters expose metrics",
+    "Prometheus scrapes and s",
+    "Alertmanager routes acti",
+    "Grafana dashboards suppo"
+  ],
+  "operational_steps": [
+    "Instrument application and node workloads",
+    "Exporters expose metrics endpoints",
+    "Prometheus scrapes and stores time series",
+    "Alert rules evaluate SLO signals",
+    "Alertmanager routes actionable alerts",
+    "Grafana dashboards support diagnosis and improvement"
+  ],
+  "failure_checkpoint": "Prometheus target is down or alert signal is noisy",
+  "recovery_path": "Check scrape target health, exporter endpoint, labels, alert rule and dashboard query before tuning."
+}

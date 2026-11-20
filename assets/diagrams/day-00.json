@@ -1,0 +1,41 @@
+{
+  "day": 0,
+  "topic": "Environment Setup",
+  "components": [
+    {
+      "name": "Mac/Linux workstation",
+      "description": "Student workstation with terminal, editor, Docker, browser and local learning tools"
+    },
+    {
+      "name": "kubectl CLI",
+      "description": "Builds requests using the selected kubeconfig context"
+    },
+    {
+      "name": "Credentials",
+      "description": "Client certificate, token or cloud identity plugin"
+    },
+    {
+      "name": "Kubernetes API",
+      "description": "Authenticated endpoint for the selected cluster"
+    },
+    {
+      "name": "Local / cloud cluster",
+      "description": "Control plane and worker nodes receive workloads"
+    }
+  ],
+  "connections": [
+    "Prepare workstation and ",
+    "Install or verify contai",
+    "Create a local or cloud ",
+    "Verify connectivity and "
+  ],
+  "operational_steps": [
+    "Prepare workstation and shell",
+    "Install or verify container tooling",
+    "Install kubectl and configure trusted context",
+    "Create a local or cloud training cluster",
+    "Verify connectivity and version compatibility"
+  ],
+  "failure_checkpoint": "Environment drift or wrong kubeconfig context",
+  "recovery_path": "Check kubectl config current-context, tool versions and credentials before targeting a cluster."
+}

@@ -1,0 +1,52 @@
+{
+  "day": 18,
+  "topic": "AWS EKS",
+  "components": [
+    {
+      "name": "Developer + IAM",
+      "description": "Identity and AWS permissions for cluster operations"
+    },
+    {
+      "name": "EKS API",
+      "description": "AWS-managed Kubernetes API endpoint"
+    },
+    {
+      "name": "AWS control plane",
+      "description": "Highly available managed API server and etcd"
+    },
+    {
+      "name": "VPC networking",
+      "description": "Subnets, route tables, security groups and VPC CNI"
+    },
+    {
+      "name": "Managed node group",
+      "description": "EC2 worker nodes register with EKS"
+    },
+    {
+      "name": "ECR + ALB/NLB",
+      "description": "Image registry and load-balancing integration"
+    },
+    {
+      "name": "Pods + Services",
+      "description": "Workloads run on nodes and expose application endpoints"
+    }
+  ],
+  "connections": [
+    "Create EKS cluster and I",
+    "Configure VPC, subnets a",
+    "Provision managed node g",
+    "Connect using AWS identi",
+    "Deploy image from ECR",
+    "Expose workload through "
+  ],
+  "operational_steps": [
+    "Create EKS cluster and IAM roles",
+    "Configure VPC, subnets and security groups",
+    "Provision managed node group",
+    "Connect kubectl using AWS identity",
+    "Deploy image from ECR",
+    "Expose workload through AWS load balancer"
+  ],
+  "failure_checkpoint": "EKS node registration, IAM, VPC CNI or ECR access fails",
+  "recovery_path": "Check IAM mappings/roles, subnet routes, security groups, CNI IP capacity and registry permissions."
+}

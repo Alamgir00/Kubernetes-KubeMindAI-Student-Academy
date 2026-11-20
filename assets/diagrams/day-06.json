@@ -1,0 +1,41 @@
+{
+  "day": 6,
+  "topic": "Labels, Selectors and Namespaces",
+  "components": [
+    {
+      "name": "Namespace",
+      "description": "Scopes namespaced API objects and policy"
+    },
+    {
+      "name": "Workload labels",
+      "description": "Attach key/value metadata to Pods and controllers"
+    },
+    {
+      "name": "Selector",
+      "description": "Matches labels to identify a set of objects"
+    },
+    {
+      "name": "Service / controller",
+      "description": "Uses selectors to target Pods or manage replicas"
+    },
+    {
+      "name": "NetworkPolicy",
+      "description": "Can constrain Pod ingress/egress when supported CNI enforces it"
+    }
+  ],
+  "connections": [
+    "Create namespace boundar",
+    "Apply labels to workload",
+    "Service / ctrl acts on s",
+    "Validate isolation and p"
+  ],
+  "operational_steps": [
+    "Create namespace boundary",
+    "Apply labels to workload resources",
+    "Selector matches labelled Pods",
+    "Service / controller acts on selected set",
+    "Validate isolation and policy boundaries"
+  ],
+  "failure_checkpoint": "Selector mismatch or unintended namespace scope",
+  "recovery_path": "Inspect labels and selectors with kubectl get ... --show-labels; correct selector and namespace targeting."
+}

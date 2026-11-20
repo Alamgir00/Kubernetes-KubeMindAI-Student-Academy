@@ -1,0 +1,46 @@
+{
+  "day": 17,
+  "topic": "Deployment Strategies",
+  "components": [
+    {
+      "name": "CI pipeline",
+      "description": "Builds, scans and publishes immutable image"
+    },
+    {
+      "name": "Stable release",
+      "description": "Existing version serves production traffic"
+    },
+    {
+      "name": "Canary / preview",
+      "description": "Small cohort receives candidate version"
+    },
+    {
+      "name": "Traffic management",
+      "description": "Ingress, mesh or Service routing shifts traffic"
+    },
+    {
+      "name": "Metrics + analysis",
+      "description": "Error rate, latency and saturation determine health"
+    },
+    {
+      "name": "Promote / rollback",
+      "description": "Increase traffic or return to known-good revision"
+    }
+  ],
+  "connections": [
+    "Publish immutable applic",
+    "Deploy canary or blue-gr",
+    "Shift limited traffic to",
+    "Evaluate latency, errors",
+    "Promote or rollback base"
+  ],
+  "operational_steps": [
+    "Publish immutable application image",
+    "Deploy canary or blue-green candidate",
+    "Shift limited traffic to candidate",
+    "Evaluate latency, errors and saturation",
+    "Promote or rollback based on evidence"
+  ],
+  "failure_checkpoint": "Canary metrics regress after traffic shift",
+  "recovery_path": "Pause promotion, compare cohort metrics and route traffic back to the known-good version."
+}
