@@ -439,5 +439,15 @@
     "Only Chromium was functionally exercised; Safari and Edge were not available for execution testing.",
     "Direct double-click file:// navigation could not be tested in the build sandbox; the project uses relative local assets and no backend server is required.",
     "The simulator is intentionally a mock training environment, not a real Kubernetes API or shell."
-  ]
+  ],
+  "layout_update_2026_11_21": {
+    "all_21_lessons_use_full_width_stacked_architecture_and_flow": true,
+    "walkthrough_controls_appear_below_architecture": true,
+    "current_stage_explanation_appears_below_controls": true,
+    "operational_steps_render_as_responsive_cards": true,
+    "desktop_step_cards_per_row": 3,
+    "tablet_step_cards_per_row": 2,
+    "mobile_step_cards_per_row": 1,
+    "browser_visual_regression_test": "Not run; structural checks only"
+  }
 }

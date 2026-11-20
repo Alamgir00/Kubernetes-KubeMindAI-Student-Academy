@@ -13,3 +13,20 @@ main{max-width:100%;min-width:0}main table{display:block;width:100%;max-width:10
 .km-svg-scroll{max-height:850px;overflow:auto}
 
 .km-resilience-note{margin-top:14px;padding:12px 14px;border-radius:9px;background:#fff4e5;border-left:4px solid #d97706;color:#56350b}.km-resilience-note strong{color:#8a4b08}
+
+/* Academy layout update: full-width architecture first, operational walkthrough below */
+.academy-main{max-width:1440px}
+.km-layout{grid-template-columns:minmax(0,1fr);gap:14px}
+.km-visual,.km-flow{width:100%;min-width:0}
+.km-flow{display:flex;flex-direction:column}
+.km-flow>.km-visual-head{order:0}
+.km-flow>.km-controls{order:1}
+.km-flow>.km-current-step{order:2}
+.km-flow>.km-step-list{order:3}
+.km-step-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;list-style:none;counter-reset:km-step;padding:0;margin:12px 0 0}
+.km-step-list li{counter-increment:km-step;display:flex;align-items:center;gap:10px;min-width:0;min-height:54px;padding:10px 12px;background:#18243a;border-radius:10px;color:#cbd5e1}
+.km-step-list li::before{content:counter(km-step) ".";font-weight:800;flex:0 0 auto;color:#cbd5e1}
+.km-step-list li.active{background:#07566a;color:#fff;outline:2px solid #22d3ee}
+.km-step-list li.active::before{color:#fff}
+@media(max-width:900px){.km-step-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.km-step-list{grid-template-columns:minmax(0,1fr)}.km-controls button{flex:1 1 auto}}
